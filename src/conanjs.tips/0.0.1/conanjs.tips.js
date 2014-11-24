@@ -23,7 +23,9 @@
     //option 为要传入的配置参数
     function ConanjsTips(option){
         var newParam = CONANJS.base.extend(option,param);
-        //后面的为默认的参数
+        
+        //updata by lixi 2014/11/24
+        //去掉存储的对象，利用this来放参数
 
         /**
          *  窗口对象
