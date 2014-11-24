@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>实例--conanjs.tips</title>
+    <link href="conanjs.tips.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="wrap">
+    <h2>这个模块用来做弹窗</h2>
+    <div class="right">
+        <div class="test-tips">测试</div>
+    </div>
+    <div class="left">
+        <button class="show-tips">显示tips</button>
+        <button class="hide-tips">隐藏tips</button>
+        <button class="reload-tips">为tips更换内容</button>
+    </div>
+</div>
+
+<script type="text/javascript" src="file:///home/lixi/code/github/conanjs/src/conanjs.base/0.0.1/conanjs.base.js"></script>
+<script type="text/javascript" src="file:///home/lixi/code/github/conanjs/src/conanjs.tips/0.0.1/conanjs.tips.js"></script>
+<script type="text/javascript">
+    var $B = CONANJS.base,
+        $T = CONANJS.tips;
+
+    //初始化一个弹窗
+    var tips1 = new $T ({
+        target : $B.className('test-tips')[0], //弹窗对象
+        isPopup : true, //是否做成弹窗的形式
+        isDisappear : false, //是否自动消失
+        dispalyMode : 'default', //显示出来的方式
+        content : 'test font', //提示的文字
+        isCloseIcon : 'false', //是否需要关闭弹窗的按钮
+        spacing : 2000 //如果需要一段时间后消失，间隔时间
+    });
+    //显示弹窗
+    $B.className('show-tips')[0].onclick = function(){
+        tips1.show();
+    };
+    //隐藏弹窗
+    $B.className('hide-tips')[0].onclick = function(){
+        tips1.hide();
+    };
+    //更换弹窗数据
+    $B.className('reload-tips')[0].onclick = function(){
+        tips1.reload('reload success');
+    };
+</script>
+</body>
+</html>
