@@ -10,32 +10,30 @@
 (function(){
     var win = window,
         doc = win.document;
-    //这个方法为内部函数，用来克隆一个对象
-    var _cloneObj = function(oldObj) { //复制对象方法
-        if (typeof(oldObj) !== 'object' || oldObj === null) {
-            return oldObj;
-        };
-
-        var newObj = new Object();
-        for (var i in oldObj){
-            newObj[i] = _cloneObj(oldObj[i]);
-        }
-        return newObj;
+    var _isObject = function(o){
+        return Object.prototype.toString.call(o) === '[object Object]';
     },
-    //这个方法为内部函数，用来合并多个对象
-    _extendObj = function(){
-        var args = arguments;
-        if (args.length < 2) return;
-        var temp = _cloneObj(args[0]); //调用复制对象方法
-        for (var n = 1; n < args.length; n++) {
-            for (var i in args[n]) {
-                temp[i] = args[n][i];
+
+    _extend = function(destination, source) {
+        var property;
+        for (property in destination) {
+            if (destination.hasOwnProperty(property)) {
+
+                // 若destination[property]和sourc[property]都是对象，则递归
+                if (_isObject(destination[property]) && _isObject(source[property])) {
+                    self(destination[property], source[property]);
+                };
+
+
+                source[property] = destination[property];
+
             }
         }
-        return temp;
     },
+
     //这个方法是所有的class操作的公共部分（抽出的公共方法）
-    _publicPart = function(ele,haveCallback,nohaveCallback){
+    //Element.classList 返回元素的所有class，用数组的方式
+    _argumentsCheck = function(ele,haveCallback,nohaveCallback){
         //如果传入的参数有误，则直接返回
         if(ele.length < 2) {
             return;
@@ -54,8 +52,10 @@
         }
     };
 
-    //dom 查找
-    var domFind = {
+    win.CONANJS = {};
+
+    //以下定义所有的base里面含有的方法
+    CONANJS.base = {
         /**
          * 通过id来查找dom元素
          *
@@ -114,25 +114,21 @@
                 tar = confine;
             }
             return tar.getElementsByTagName(tagname);
-        }
-    };
-
-
-    //这个对象里面包含对class的操作，添加/删除/判断是否含有
-    var classOperating = {
+        },
         /**
          * addClass方法用来添加class
          *
          * @param     target（object） : 当前的操作对象；  className（string） ： 要添加或删除的class
          *
          * @description 如果传入的参数有误会直接返回，如果传入的class已经存在也会直接返回，只有dom元素正确，className为‘string’的时候才会加上class
+         * Element.classList.add(""); 添加一个class(可以用逗号分割添加多个)
          */
         addClass : function(target,className){
             //把参数存储起来，传给publicPart
             var ele = arguments;
 
             //调用方法
-            _publicPart(ele,function(){
+            _argumentsCheck(ele,function(){
                 return;
             },function(){
                 //如果class里面不包含新的class就添加一个
@@ -146,10 +142,11 @@
          * @param     target（object） : 当前的操作对象；  className（string） ： 要添加或删除的class
          *
          * @description 如果传入的参数有误会直接返回，如果传入的class不存在也会直接返回，只有当前传入的dom元素含有这个class才会正常删除
+         * 用到Element.classList.remove(""); 删除一个class
          */
         removeClass : function(target,className){
             var ele = arguments;
-            _publicPart(ele,function(){
+            _argumentsCheck(ele,function(){
                 target.classList.remove(className);
             },function(){
                 return;
@@ -157,44 +154,43 @@
 
         },
         /**
-         * removeClass方法用来删除class
+         * hasClass方法用来判断是否含有一个指定的class
          *
          * @param     target（object） : 当前的操作对象；  className（string） ： 要添加或删除的class
          * @returns   {Boolean}
          * @description   如果传入的参数有误会直接返回，如果传入的class不存在也会直接返回，正常情况下会返回Boolean值
+         * Element.classList.contains("") 判断是否含有某一class
          */
         hasClass : function(target,className){
 
             var ele = arguments,
                 result = false;
-            _publicPart(ele,function(){
+            _argumentsCheck(ele,function(){
                 result = true;
             });
             return result;
-        }
-    };
+        },
+        /**
+         * 合并对象的方法
+         *
+         * @param     要合并的对象（object）
+         * @description   传入的对象从后面向前面合并，会放到最前面
+         */
+        extend : function(){
+            var arr = arguments,
+                result = {},
+                i;
 
-    //对象的合并
-    var objExtend = {
-        extendObj : function(){
-            var args = arguments;
-            if (args.length < 2) return;
-            var temp = _cloneObj(args[0]); //调用复制对象方法
-            for (var n = 1; n < args.length; n++) {
-                for (var i in args[n]) {
-                    temp[i] = args[n][i];
-                }
+            if (!arr.length) return {};
+
+            for (i = arr.length - 1; i >= 0; i--) {
+                if (_isObject(arr[i])) {
+                    _extend(arr[i], result);
+                };
             }
-            return temp;
+
+            arr[0] = result;
+            return result;
         }
     };
-
-    win.CONANJS = {};
-    CONANJS.base = _extendObj(classOperating,domFind,objExtend);
-    //总结：
-    //Element.classList 返回元素的所有class，用数组的方式
-    //Element.classList.remove(""); 删除一个class
-    //Element.classList.add(""); 添加一个class(可以用逗号分割添加多个)
-    //Element.classList.toggle(""); 如果存在则移除它，否则添加它
-    //Element.classList.contains("") 判断是否含有某一class
 })();
