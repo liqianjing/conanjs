@@ -9,69 +9,78 @@
  */
 (function(){
 
+    //定义默认的参数
+    var param  = {
+        target : null,
+        isPopup : false,
+        isDisappear : false,
+        displayMode : 'default',
+        isCloseIcon : false,
+        content : '',
+        spacing : 2000
+    };
+
     //option 为要传入的配置参数
-    var ConanjsTips = function (option){
-
+    function ConanjsTips(option){
+        var newParam = CONANJS.base.extend(option,param);
         //后面的为默认的参数
-
-        var paramObj = {};
 
         /**
          *  窗口对象
          *
          *  @type   {Object}
          */
-        paramObj.target = this.target = option.target || null;
+        this.target = newParam.target;
         /**
          *  提示窗口是否弹出显示（支持弹窗和在页面里直接显示两种方式）,默认弹出
          *
          *  @type   {Boolean}
          */
-        paramObj.isPopup = this.isPopup = option.isPopup || false;
+        this.isPopup = newParam.isPopup;
         /**
          *  提示窗口是否会定时自动消失，默认不消失
          *
          *  @type   {Boolean}
          */
-        paramObj.isDisappear = this.isDisappear = option.isDisappear || false;
+        this.isDisappear = newParam.isDisappear;
         /**
          *  提示窗口的显示方式（支持show/hide; 弹跳）
          *
          *  @type   {String}
          */
-        paramObj.displayMode = this.displayMode = option.displayMode || 'default';
+        this.displayMode = newParam.displayMode;
         /**
          *  是否需要关闭窗口的按钮
          *  注：如果需要关闭的按钮，会默认提供一个class = ‘conanjs-tips-close’的带有关闭功能的span添加到target后面,默认的是不需要
          *
          *  @type   {Boolean}
          */
-        paramObj.isCloseIcon = this.isCloseIcon = option.isCloseIcon || false;
+        this.isCloseIcon = newParam.isCloseIcon;
         /**
          *  弹窗的内容(默认为空)
          *
          *  @type   {String}
          */
-        paramObj.content = this.content = option.content || '';
+        this.content = newParam.content;
         /**
          *  弹窗的显示时间，默认为2000毫秒，只有isDisappear = true 时这个才会解析
          *
          *  @type   {Number}
          */
-        paramObj.spacing = this.spacing = option.spacing || 2000;
+        this.spacing = newParam.spacing;
 
         /**
          *  显示窗口
          */
         this.show = function(){
-            paramObj.target.style.display = 'block';
+            this.target.style.display = 'block';
         };
 
         /**
          *  隐藏窗口
          */
         this.hide = function(){
-            paramObj.target.style.display = 'none';
+            this.target.style.display = 'none';
         };
 
         /**
@@ -80,16 +89,15 @@
          *  @type   {String}
          */
         this.reload = function(content){
-            paramObj.target.innerText = content;
+            this.target.innerText = content;
         };
 
         //解析参数,初始化提示窗口
-        domReader(paramObj);
-    },
+        domReader(this);
+    }
     //这个方法用来控制提示窗口的显示与隐藏
-    showOrHide = function(tar,display,content){
+    var showOrHide = function(tar,display,content){
 
-        console.log(content);
         if(display === 'show'){
             tar.innerText = content;
             tar.style.display = 'block';
@@ -100,6 +108,7 @@
 
     },
     domReader = function(paramObj){
+
         var $B = CONANJS.base;
         //所有的参数已经ok
 
