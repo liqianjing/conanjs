@@ -10,6 +10,10 @@
 (function(){
     var win = window,
         doc = win.document;
+
+    //add by lixi 2014/11/24
+    //用来校验要合并的参数
+
     var _isObject = function(o){
         return Object.prototype.toString.call(o) === '[object Object]';
     },
