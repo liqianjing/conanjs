@@ -11,65 +11,55 @@
 
     //定义默认的参数
     var param  = {
-        target : null,
-        isPopup : false,
-        isDisappear : false,
-        displayMode : 'default',
-        isCloseIcon : false,
-        content : '',
-        spacing : 2000
-    };
-
-    //option 为要传入的配置参数
-    function ConanjsTips(option){
-        var newParam = CONANJS.base.extend(option,param);
-        
-        //updata by lixi 2014/11/24
-        //去掉存储的对象，利用this来放参数
-
         /**
          *  窗口对象
          *
          *  @type   {Object}
          */
-        this.target = newParam.target;
+        target : null,
         /**
          *  提示窗口是否弹出显示（支持弹窗和在页面里直接显示两种方式）,默认弹出
          *
          *  @type   {Boolean}
          */
-        this.isPopup = newParam.isPopup;
+        isPopup : false,
         /**
          *  提示窗口是否会定时自动消失，默认不消失
          *
          *  @type   {Boolean}
          */
-        this.isDisappear = newParam.isDisappear;
+        isDisappear : false,
         /**
          *  提示窗口的显示方式（支持show/hide; 弹跳）
          *
          *  @type   {String}
          */
-        this.displayMode = newParam.displayMode;
+        displayMode : 'default',
         /**
          *  是否需要关闭窗口的按钮
          *  注：如果需要关闭的按钮，会默认提供一个class = ‘conanjs-tips-close’的带有关闭功能的span添加到target后面,默认的是不需要
          *
          *  @type   {Boolean}
          */
-        this.isCloseIcon = newParam.isCloseIcon;
+        isCloseIcon : false,
         /**
          *  弹窗的内容(默认为空)
          *
          *  @type   {String}
          */
-        this.content = newParam.content;
+        content : '',
         /**
          *  弹窗的显示时间，默认为2000毫秒，只有isDisappear = true 时这个才会解析
          *
          *  @type   {Number}
          */
-        this.spacing = newParam.spacing;
+        spacing : 2000
+    };
+
+    //option 为要传入的配置参数
+    function ConanjsTips(option){
+
+        CONANJS.base.extend(this,param,option);
 
         /**
          *  显示窗口

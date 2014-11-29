@@ -19,10 +19,38 @@
 </div>
 
 <script type="text/javascript" src="file:///home/lixi/code/github/conanjs/src/conanjs.base/0.0.1/conanjs.base.js"></script>
-<script type="text/javascript" src="file:///home/lixi/code/github/conanjs/src/conanjs.tips/0.0.1/conanjs.tips.js"></script>
+<script type="text/javascript" src="file:///home/lixi/code/github/conanjs/src/conanjs.tips/0.0.1/conanjs.tips1.js"></script>
 <script type="text/javascript">
     var $B = CONANJS.base,
         $T = CONANJS.tips;
+
+    //第一版的调用
+
+//    $T({
+//        target : $B.className('test-tips')[0], //弹窗对象
+//        isPopup : true, //是否做成弹窗的形式
+//        isDisappear : false, //是否自动消失
+//        dispalyMode : 'default', //显示出来的方式
+//        content : 'test font', //提示的文字
+//        isCloseIcon : 'false', //是否需要关闭弹窗的按钮
+//        spacing : 2000 //如果需要一段时间后消失，间隔时间
+//    });
+//
+//    $B.className('show-tips')[0].onclick = function(){
+//        $T('show',$B.className('test-tips')[0]);
+//    };
+//
+//    $B.className('hide-tips')[0].onclick = function(){
+//        $T('hide',$B.className('test-tips')[0]);
+//    };
+//
+//    $B.className('reload-tips')[0].onclick = function(){
+//        $T('reload',{target:$B.className('test-tips')[0],newCont : 'aaaaa'});
+//    };
+
+
+    //第二版以后的调用
+
 
     //初始化一个弹窗
     var tips1 = new $T ({
@@ -34,6 +62,9 @@
         isCloseIcon : 'false', //是否需要关闭弹窗的按钮
         spacing : 2000 //如果需要一段时间后消失，间隔时间
     });
+
+    //下面的是调用接口
+
     //显示弹窗
     $B.className('show-tips')[0].onclick = function(){
         tips1.show();

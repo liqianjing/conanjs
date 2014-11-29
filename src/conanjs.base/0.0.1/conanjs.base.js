@@ -12,32 +12,27 @@
         doc = win.document;
 
     //add by lixi 2014/11/24
-    //用来校验要合并的参数
+    //判断类型
 
-    var _isObject = function(o){
-        return Object.prototype.toString.call(o) === '[object Object]';
-    },
-
-    _extend = function(destination, source) {
-        var property;
-        for (property in destination) {
-            if (destination.hasOwnProperty(property)) {
-
-                // 若destination[property]和sourc[property]都是对象，则递归
-                if (_isObject(destination[property]) && _isObject(source[property])) {
-                    self(destination[property], source[property]);
-                };
-
-
-                source[property] = destination[property];
-
-            }
+    //对象
+    function isObject(obj){
+        return Object.prototype.toString.call(obj) === '[object Object]';
+    }
+    //数组
+    function isArray(arr){
+        return (arr.constructor === Array && Object.prototype.toString.call(arr) === '[object Array]');
+    }
+    //空对象
+    function isPlainObject(obj) {
+        for (var n in obj) {
+            return false;
         }
-    },
+        return true;
+    }
 
     //这个方法是所有的class操作的公共部分（抽出的公共方法）
     //Element.classList 返回元素的所有class，用数组的方式
-    _argumentsCheck = function(ele,haveCallback,nohaveCallback){
+    function argumentsCheck(ele,haveCallback,nohaveCallback){
         //如果传入的参数有误，则直接返回
         if(ele.length < 2) {
             return;
@@ -54,7 +49,7 @@
                 nohaveCallback();
             }
         }
-    };
+    }
 
     win.CONANJS = {};
 
@@ -132,7 +127,7 @@
             var ele = arguments;
 
             //调用方法
-            _argumentsCheck(ele,function(){
+            argumentsCheck(ele,function(){
                 return;
             },function(){
                 //如果class里面不包含新的class就添加一个
@@ -150,7 +145,7 @@
          */
         removeClass : function(target,className){
             var ele = arguments;
-            _argumentsCheck(ele,function(){
+            argumentsCheck(ele,function(){
                 target.classList.remove(className);
             },function(){
                 return;
@@ -169,7 +164,7 @@
 
             var ele = arguments,
                 result = false;
-            _argumentsCheck(ele,function(){
+            argumentsCheck(ele,function(){
                 result = true;
             });
             return result;
@@ -180,21 +175,68 @@
          * @param     要合并的对象（object）
          * @description   传入的对象从后面向前面合并，会放到最前面
          */
-        extend : function(){
-            var arr = arguments,
-                result = {},
-                i;
+        extend : function (destination, source) {
+            var options, name, src, copy, copyIsArray, clone,
+                target = arguments[0] || {},
+                i = 1,
+                length = arguments.length,
+                deep = false;
 
-            if (!arr.length) return {};
+            // 处理深拷贝的情况
+            if (typeof target === "boolean") {
+                deep = target;
 
-            for (i = arr.length - 1; i >= 0; i--) {
-                if (_isObject(arr[i])) {
-                    _extend(arr[i], result);
-                };
+                // 跳过布尔和目标
+                target = arguments[ i ] || {};
+                i++;
             }
 
-            arr[0] = result;
-            return result;
+            // 当目标是一个字符串或东西（可能在深副本）
+            if (typeof target !== "object" && !typeof target === 'function') {
+                target = {};
+            }
+
+            // 如果只有一个参数传递
+            if (i === length) {
+                target = this;
+                i--;
+            }
+
+            for (; i < length; i++) {
+                // 只处理非空/未定义值
+                if ((options = arguments[ i ]) != null) {
+                    // 扩展基本对象
+                    for (name in options) {
+                        src = target[ name ];
+                        copy = options[ name ];
+
+                        // 防止无限循环
+                        if (target === copy) {
+                            continue;
+                        }
+
+                        // 递归如果我们合并纯对象或数组
+                        if (deep && copy && ( isPlainObject(copy) || (copyIsArray = isArray(copy)) )) {
+                            if (copyIsArray) {
+                                copyIsArray = false;
+                                clone = src && $T.isArray(src) ? src : [];
+
+                            } else {
+                                clone = src && isPlainObject(src) ? src : {};
+                            }
+
+                            // 不移动原始对象，他们克隆
+                            target[ name ] = CONANJS.extend(deep, clone, copy);
+
+                        } else if (copy !== undefined) {
+                            target[ name ] = copy;
+                        }
+                    }
+                }
+            }
+
+            // 返回合并后的对象
+            return target;
         }
     };
 })();
