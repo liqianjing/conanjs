@@ -58,7 +58,7 @@
     HIDE = 'hidding';
 
     //option 为要传入的配置参数;Toast是一个类
-    function Toast(option){
+    function Tips(option){
 
         $B.extend(this,param,option);
 
@@ -66,7 +66,7 @@
         domReader(this);
     }
     //接口
-    Toast.prototype = {
+    Tips.prototype = {
         /**
          *  显示窗口
          */
@@ -149,5 +149,5 @@
         }
 
     }
-    CONANJS.tips = Toast;
+    CONANJS.tips = Tips;
 })();
