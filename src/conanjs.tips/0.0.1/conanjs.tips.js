@@ -57,37 +57,38 @@
     },
     HIDE = 'hidding';
 
-    //option 为要传入的配置参数
+    //option 为要传入的配置参数;Toast是一个类
     function Toast(option){
 
-        CONANJS.base.extend(this,param,option);
+        $B.extend(this,param,option);
 
+        //解析参数,初始化提示窗口
+        domReader(this);
+    }
+    Toast.prototype = {
         /**
          *  显示窗口
          */
-        this.show = function(){
+        show : function(){
             $B.removeClass(this.target,HIDE);
-        };
+        },
 
         /**
          *  隐藏窗口
          */
-        this.hide = function(){
+        hide : function(){
             $B.addClass(this.target,HIDE);
-        };
+        },
 
         /**
          *  替换提示窗口的内容
          *
          *  @type   {String}
          */
-        this.reload = function(content){
+        reload : function(content){
             this.target.innerText = content;
-        };
-
-        //解析参数,初始化提示窗口
-        domReader(this);
-    }
+        }
+    };
     //这个方法用来控制提示窗口的显示与隐藏
     function showOrHide(tar,display,content){
 
