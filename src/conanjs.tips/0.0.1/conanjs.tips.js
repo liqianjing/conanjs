@@ -65,6 +65,7 @@
         //解析参数,初始化提示窗口
         domReader(this);
     }
+    //接口
     Toast.prototype = {
         /**
          *  显示窗口
