@@ -29,12 +29,16 @@
     padding: 0 5px;
     line-height: 30px;
     border-radius: 3px;
-    /*position: absolute;*/
     top: 20px;
     left: 30px;
-    /*background: #000;*/
-    /*color: #fff;*/
-    /*opacity: 0.8;*/
+}
+.wrap .test-tips.pop {
+    position: absolute;
+    background: #000;
+    color: #fff;
+    opacity: 0.8;
+}
+.wrap .test-tips.hidding {
     display: none;
 }
 

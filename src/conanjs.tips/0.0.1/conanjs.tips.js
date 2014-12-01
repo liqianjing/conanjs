@@ -1,5 +1,5 @@
 /**
- * 信息提示（tips）
+ * 信息提示（tips/toast）
  *
  * @author      liqianjing(j935194120@gmail.com)
  * @version     2014-11-23
@@ -8,7 +8,7 @@
  * @depend      conanjs.base.js
  */
 (function(){
-
+    var $B = CONANJS.base;
     //定义默认的参数
     var param  = {
         /**
@@ -54,10 +54,11 @@
          *  @type   {Number}
          */
         spacing : 2000
-    };
+    },
+    HIDE = 'hidding';
 
     //option 为要传入的配置参数
-    function ConanjsTips(option){
+    function Toast(option){
 
         CONANJS.base.extend(this,param,option);
 
@@ -65,14 +66,14 @@
          *  显示窗口
          */
         this.show = function(){
-            this.target.style.display = 'block';
+            $B.removeClass(this.target,HIDE);
         };
 
         /**
          *  隐藏窗口
          */
         this.hide = function(){
-            this.target.style.display = 'none';
+            $B.addClass(this.target,HIDE);
         };
 
         /**
@@ -88,38 +89,38 @@
         domReader(this);
     }
     //这个方法用来控制提示窗口的显示与隐藏
-    var showOrHide = function(tar,display,content){
+    function showOrHide(tar,display,content){
 
         if(display === 'show'){
             tar.innerText = content;
-            tar.style.display = 'block';
+            $B.removeClass(tar,HIDE);
         }else if(display === 'hide'){
             tar.innerText = '';
-            tar.style.display = 'none';
+            $B.addClass(tar,HIDE);
         }
 
-    },
-    domReader = function(paramObj){
-
-        var $B = CONANJS.base;
+    }
+    function domReader(paramObj){
         //所有的参数已经ok
-
+        var target = paramObj.target,
+            hideStr = 'hide',
+            showStr = 'show';
         //是否为弹窗
         if(paramObj.isPopup){
-            paramObj.target.style.position = 'absolute';
-            paramObj.target.style.background = '#000';
-            paramObj.target.style.color = '#fff';
-            paramObj.target.style.opacity = '0.8';
+
+            // updata 2014-12-01 把js修改css属性的部分抽离出来，用一个class来控制
+
+            $B.addClass(target,'pop');
         }
 
         //以下是是否带有关闭按钮的处理
         if(paramObj.isCloseIcon){ //如果需要关闭按钮
             var closeBtn = document.createElement('span');
             $B.addClass(closeBtn,'conanjs-tips-close');
-            paramObj.target.appendChild(closeBtn);
+            target.appendChild(closeBtn);
 
             closeBtn.onclick = function(){
-                showOrHide(paramObj.target,'hide');
+                showOrHide(target,hideStr);
             };
         }
 
@@ -134,17 +135,17 @@
             }
 
             //显示提示窗口
-            showOrHide(paramObj.target,'show',paramObj.content);
+            showOrHide(target,showStr,paramObj.content);
 
             //一段时间后消失
             time = setTimeout(function(){
-                showOrHide(paramObj.target,'hide');
+                showOrHide(target,hideStr);
             },paramObj.spacing);
 
         }else { //如果不需要默认消失的操作
-            showOrHide(paramObj.target,'show',paramObj.content);
+            showOrHide(target,showStr,paramObj.content);
         }
 
-    };
-    CONANJS.tips = ConanjsTips;
+    }
+    CONANJS.tips = Toast;
 })();
