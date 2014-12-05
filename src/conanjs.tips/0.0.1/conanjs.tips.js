@@ -8,7 +8,7 @@
  * @depend      conanjs.base.js
  */
 (function(){
-    var $B = CONANJS.base;
+    var $B = conanjs.dom;
     //定义默认的参数
     var param  = {
         /**
@@ -47,7 +47,7 @@
          *
          *  @type   {String}
          */
-        content : '',
+        content : null,
         /**
          *  弹窗的显示时间，默认为2000毫秒，只有isDisappear = true 时这个才会解析
          *
@@ -57,28 +57,21 @@
     },
     HIDE = 'hidding';
 
-    //option 为要传入的配置参数;Toast是一个类
     function Tips(option){
 
-        $B.extend(this,param,option);
+        conanjs.tools.extend(this,param,option);
 
         //解析参数,初始化提示窗口
         domReader(this);
     }
     //接口
     Tips.prototype = {
-        /**
-         *  显示窗口
-         */
-        show : function(){
-            $B.removeClass(this.target,HIDE);
-        },
 
         /**
-         *  隐藏窗口
+         *  控制窗口的显示和隐藏
          */
-        hide : function(){
-            $B.addClass(this.target,HIDE);
+        tipsControl : function(){
+            showOrHide(this.target);
         },
 
         /**
@@ -91,16 +84,32 @@
         }
     };
     //这个方法用来控制提示窗口的显示与隐藏
-    function showOrHide(tar,display,content){
-
-        if(display === 'show'){
-            tar.innerText = content;
-            $B.removeClass(tar,HIDE);
-        }else if(display === 'hide'){
-            tar.innerText = '';
-            $B.addClass(tar,HIDE);
+    function showOrHide(tar){
+        var control = 'addClass';
+        if($B.hasClass(tar,HIDE)){
+            control = 'removeClass';
         }
+        $B[control](tar,HIDE);
+    }
+    //这个方法来控制定时器，自动消失
+    function autoHide(paramObj,target){
+        var time;
+        if(paramObj.isDisappear){ //如果需要一段时间后消失
 
+            //定时器操作
+            if(time) {
+                clearTimeout(time);
+            }
+
+            //显示提示窗口
+            showOrHide(target);
+
+            //一段时间后消失
+            time = setTimeout(function(){
+                showOrHide(target);
+            },paramObj.spacing);
+
+        }
     }
     function domReader(paramObj){
         //所有的参数已经ok
@@ -122,32 +131,11 @@
             target.appendChild(closeBtn);
 
             closeBtn.onclick = function(){
-                showOrHide(target,hideStr);
+                showOrHide(target);
             };
         }
 
-
-        //以下是消失与否的处理
-        var time;
-        if(paramObj.isDisappear){ //如果需要一段时间后消失
-
-            //定时器操作
-            if(time) {
-                clearTimeout(time);
-            }
-
-            //显示提示窗口
-            showOrHide(target,showStr,paramObj.content);
-
-            //一段时间后消失
-            time = setTimeout(function(){
-                showOrHide(target,hideStr);
-            },paramObj.spacing);
-
-        }else { //如果不需要默认消失的操作
-            showOrHide(target,showStr,paramObj.content);
-        }
-
+        autoHide(paramObj,target);
     }
-    CONANJS.tips = Tips;
+    conanjs.tips = Tips;
 })();
