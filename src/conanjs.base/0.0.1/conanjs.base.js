@@ -5,34 +5,86 @@
  * @version     2014-11-22
  * @version     0.0.1
  *
- * @depend      使用原生js来编写故不依赖任何组建
  */
 (function(){
-    var win = window,
-        doc = win.document;
+    var win = this;
+    win.conanjs = win.conanjs || {};
+})();
 
-    //add by lixi 2014/11/24
-    //判断类型
+//这部分是类型判断
+(function(){
+    var win = this;
 
-    //对象
-    function isObject(obj){
-        return Object.prototype.toString.call(obj) === '[object Object]';
-    }
-    //数组
-    function isArray(arr){
-        return (arr.constructor === Array && Object.prototype.toString.call(arr) === '[object Array]');
-    }
-    //空对象
-    function isPlainObject(obj) {
-        for (var n in obj) {
-            return false;
+    //类型校验
+    function isType(type) {
+        return function(obj) {
+            return Object.prototype.toString.call(obj) === "[object " + type + "]"
         }
-        return true;
     }
 
-    //这个方法是所有的class操作的公共部分（抽出的公共方法）
-    //Element.classList 返回元素的所有class，用数组的方式
-    function argumentsCheck(ele,haveCallback,nohaveCallback){
+    conanjs.type = {
+        /**
+         * 判断是否为数组
+         *
+         * @param    {Array}
+         * @return  {Boolean}
+         */
+        isArr : isType('Array'),
+        /**
+         * 判断是否为对象
+         *
+         * @param    {Object}
+         * @return  {Boolean}
+         */
+        isObjct : isType('Object'),
+        /**
+         * 判断是不是字符串
+         *
+         * @param    {String}
+         * @return  {Boolean}
+         */
+        isString : isType('String'),
+        /**
+         * 判断是不是数字类型
+         *
+         * @param    {Number}
+         * @return  {Boolean}
+         */
+        isNumber : isType('Number'),
+        /**
+         * 判断是不是一个方法（function）
+         *
+         * @param    {Function}
+         * @return  {Boolean}
+         */
+        isFunction : isType('Function'),
+        /**
+         * 判断是不是空对象
+         *
+         * @param {Object}
+         * @return {Boolean}
+         */
+        isPlainObject : function(obj) {
+            if(isObject(obj)){
+                for (var n in obj) {
+                    return false;
+                }
+                return true;
+            }else {
+                return false;
+            }
+        }
+    };
+})();
+
+//这部分是dom查找
+(function(){
+    var doc = document,
+        $T = conanjs.type;
+
+    //这个方法用来控制class的公共部分
+    function classControl(ele,callback){
+        //console.log(ele);
         //如果传入的参数有误，则直接返回
         if(ele.length < 2) {
             return;
@@ -42,19 +94,13 @@
         var target = ele[0],
             className = ele[1];
         //对于有无传入的class做不同的操作
-        if(target && typeof className === 'string'){
-            if(target.classList.contains(className) && typeof haveCallback === 'function') { //如果包含传入的class
-                haveCallback();
-            }else if(typeof nohaveCallback === 'function'){ //如果不包含
-                nohaveCallback();
+        if(target && $T.isString(className)){
+            if($T.isFunction(callback)) { //如果包含传入的class
+                callback();
             }
         }
     }
-
-    win.CONANJS = {};
-
-    //以下定义所有的base里面含有的方法
-    CONANJS.base = {
+    conanjs.dom = {
         /**
          * 通过id来查找dom元素
          *
@@ -62,10 +108,10 @@
          * @return  {Object}
          */
         id : function(id){
-
             if(arguments.length < 1){return;}
 
-            if(typeof id === 'string'){
+            //修改类型判断的方式
+            if($T.isString(id)){
                 return doc.getElementById(id);
             }
         },
@@ -80,13 +126,16 @@
             if(arguments.length < 1){return;}
 
             var tar = doc;
-            if(confine && typeof confine === 'object'){
+
+
+            if(confine && $T.isObject(confine)){
                 tar = confine;
             }
-            if(tar.getElementsByClassName(classname)){ //如果支持class查找
+
+            if(doc.getElementsByClassName){ //如果支持class查找
                 return tar.getElementsByClassName(classname);
             }else {
-                var children = context.getElementsByTagName('*'),
+                var children = tar.getElementsByTagName('*'),
                     elements = [];
 
                 for (var i = 0, l = children.length; i < l; i++) {
@@ -104,12 +153,14 @@
          * @return  {Array}
          * @description
          */
+
         tagName : function(tagname,confine){
 
             if(arguments.length < 1){return;}
 
             var tar = doc;
-            if(confine && typeof confine === 'object'){
+
+            if(confine && $T.isObject(confine)){
                 tar = confine;
             }
             return tar.getElementsByTagName(tagname);
@@ -123,13 +174,9 @@
          * Element.classList.add(""); 添加一个class(可以用逗号分割添加多个)
          */
         addClass : function(target,className){
-            //把参数存储起来，传给publicPart
-            var ele = arguments;
 
             //调用方法
-            argumentsCheck(ele,function(){
-                return;
-            },function(){
+            classControl(arguments,function(){
                 //如果class里面不包含新的class就添加一个
                 target.classList.add(className);
             });
@@ -144,11 +191,8 @@
          * 用到Element.classList.remove(""); 删除一个class
          */
         removeClass : function(target,className){
-            var ele = arguments;
-            argumentsCheck(ele,function(){
+            classControl(arguments,function(){
                 target.classList.remove(className);
-            },function(){
-                return;
             });
 
         },
@@ -162,19 +206,25 @@
          */
         hasClass : function(target,className){
 
-            var ele = arguments,
-                result = false;
-            argumentsCheck(ele,function(){
-                result = true;
+            if(arguments.length < 2) {
+                return;
+            }
+
+            var result = false;
+            classControl(arguments,function(){
+                if(target.classList.contains(className)){
+                    result = true;
+                }
             });
             return result;
-        },
-        /**
-         * 合并对象的方法
-         *
-         * @param     要合并的对象（object）
-         * @description   传入的对象从后面向前面合并，会放到最前面
-         */
+        }
+    };
+})();
+
+//这部分是工具方法
+(function(){
+    var $T = conanjs.type;
+    conanjs.tools = {
         extend : function (destination, source) {
             var options, name, src, copy, copyIsArray, clone,
                 target = arguments[0] || {},
@@ -182,7 +232,7 @@
                 length = arguments.length,
                 deep = false;
 
-            // 处理深拷贝的情况
+            // 处理深拷贝的情况（所有的部分全部拷贝一次）
             if (typeof target === "boolean") {
                 deep = target;
 
@@ -191,8 +241,8 @@
                 i++;
             }
 
-            // 当目标是一个字符串或东西（可能在深副本）
-            if (typeof target !== "object" && !typeof target === 'function') {
+            // 当目标是一个字符串（可能在深副本）
+            if (!$T.isObject(target) && !$T.isFunction(target)) {
                 target = {};
             }
 
@@ -216,17 +266,17 @@
                         }
 
                         // 递归如果我们合并纯对象或数组
-                        if (deep && copy && ( isPlainObject(copy) || (copyIsArray = isArray(copy)) )) {
+                        if (deep && copy && ( $T.isPlainObject(copy) || (copyIsArray = $T.isArray(copy)) )) {
                             if (copyIsArray) {
                                 copyIsArray = false;
                                 clone = src && $T.isArray(src) ? src : [];
 
                             } else {
-                                clone = src && isPlainObject(src) ? src : {};
+                                clone = src && $T.isPlainObject(src) ? src : {};
                             }
 
                             // 不移动原始对象，他们克隆
-                            target[ name ] = CONANJS.extend(deep, clone, copy);
+                            target[ name ] = conanjs.extend(deep, clone, copy);
 
                         } else if (copy !== undefined) {
                             target[ name ] = copy;
