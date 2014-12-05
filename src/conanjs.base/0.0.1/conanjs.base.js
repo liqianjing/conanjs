@@ -36,7 +36,7 @@
          * @param    {Object}
          * @return  {Boolean}
          */
-        isObjct : isType('Object'),
+        isObject : isType('Object'),
         /**
          * 判断是不是字符串
          *
@@ -224,6 +224,7 @@
 //这部分是工具方法
 (function(){
     var $T = conanjs.type;
+    console.log(conanjs.type);
     conanjs.tools = {
         extend : function (destination, source) {
             var options, name, src, copy, copyIsArray, clone,
@@ -242,7 +243,7 @@
             }
 
             // 当目标是一个字符串（可能在深副本）
-            if (!$T.isObject(target) && !$T.isFunction(target)) {
+            if (!($T.isObject(target)) && !($T.isFunction(target))) {
                 target = {};
             }
 
