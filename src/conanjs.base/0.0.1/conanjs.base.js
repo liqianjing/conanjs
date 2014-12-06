@@ -15,7 +15,7 @@
 (function(){
     var win = this;
 
-    //类型校验
+    //类型校验的公共部分
     function isType(type) {
         return function(obj) {
             return Object.prototype.toString.call(obj) === "[object " + type + "]"
@@ -73,7 +73,14 @@
             }else {
                 return false;
             }
-        }
+        },
+        /**
+         * 判断是否是布尔类型
+         *
+         * @param {Object}
+         * @return {Boolean}
+         */
+         isBoolean : isType('Boolean')
     };
 })();
 
@@ -93,7 +100,7 @@
         //拿到传入的参数
         var target = ele[0],
             className = ele[1];
-        //对于有无传入的class做不同的操作
+
         if(target && $T.isString(className)){
             if($T.isFunction(callback)) { //如果包含传入的class
                 callback();
@@ -224,7 +231,6 @@
 //这部分是工具方法
 (function(){
     var $T = conanjs.type;
-    console.log(conanjs.type);
     conanjs.tools = {
         extend : function (destination, source) {
             var options, name, src, copy, copyIsArray, clone,
@@ -234,7 +240,7 @@
                 deep = false;
 
             // 处理深拷贝的情况（所有的部分全部拷贝一次）
-            if (typeof target === "boolean") {
+            if ($T.isBoolean(target)) {
                 deep = target;
 
                 // 跳过布尔和目标
@@ -277,7 +283,7 @@
                             }
 
                             // 不移动原始对象，他们克隆
-                            target[ name ] = conanjs.extend(deep, clone, copy);
+                            target[ name ] = conanjs.tools.extend(deep, clone, copy);
 
                         } else if (copy !== undefined) {
                             target[ name ] = copy;
