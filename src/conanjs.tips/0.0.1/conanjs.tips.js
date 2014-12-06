@@ -71,7 +71,17 @@
          *  控制窗口的显示和隐藏
          */
         tipsControl : function(){
-            showOrHide(this.target);
+            var tar = this.target;
+            if($B.hasClass(HIDE)){
+                showOrHide(tar);
+            }else {
+                if(this.isDisappear){
+                    //自动消失的
+                    autoHide(this);
+                }else {
+                    showOrHide(tar);
+                }
+            }
         },
 
         /**
@@ -93,7 +103,8 @@
     }
     //这个方法来控制定时器，自动消失
     function autoHide(paramObj,target){
-        var time;
+        var time,
+            target = target || paramObj.target;
         if(paramObj.isDisappear){ //如果需要一段时间后消失
 
             //定时器操作
@@ -102,7 +113,7 @@
             }
 
             //显示提示窗口
-            showOrHide(target);
+            $B.removeClass(target,HIDE);
 
             //一段时间后消失
             time = setTimeout(function(){
@@ -111,6 +122,7 @@
 
         }
     }
+
     function domReader(paramObj){
         //所有的参数已经ok
         var target = paramObj.target,
