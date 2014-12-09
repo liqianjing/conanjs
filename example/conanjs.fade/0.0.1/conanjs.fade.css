@@ -1,0 +1,7 @@
+.slider {
+    width: 500px;
+    height: 500px;
+    background: #000;
+    opacity: 1;
+    filter: alpha(opacity = 100);
+}

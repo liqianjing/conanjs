@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>实例--conanjs.silder</title>
+    <link href="conanjs.fade.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="wrap">
+    <div class="slider" id="slider"></div>
+</div>
+
+<script type="text/javascript" src="../../../src/conanjs.base/0.0.1/conanjs.base.js"></script>
+<script type="text/javascript" src="../../../src/conanjs.fade/0.0.1/conanjs.fade.js"></script>
+<script type="text/javascript">
+    var sliderDom = document.getElementById('slider'),
+        $F = conanjs.fade;
+//    sliderDom.onclick = function(){
+//        $F.fadein(sliderDom, 100, 5000);
+//    }
+    sliderDom.onclick = function(){
+        $F.fadeout(sliderDom, 0, 10000);
+    }
+</script>
+</body>
+</html>
