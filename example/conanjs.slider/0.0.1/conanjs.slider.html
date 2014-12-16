@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>实例--conanjs.silder</title>
+    <link href="conanjs.slider.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="wrap">
+
+</div>
+<script type="text/javascript" src="../../../../Archmage/dest/Archmage-1.0.0.js"></script>
+<script type="text/javascript" src="../../../src/conanjs.base/0.0.1/conanjs.base.js"></script>
+<script type="text/javascript" src="../../../src/conanjs.slider/0.0.1/conanjs.slider.js"></script>
+<script type="text/javascript">
+    conanjs.slider({
+        target : conanjs.dom.className('wrap')[0],
+        animate : 'default',
+        path : 'top',
+        speed : 500,
+        imgArr : [
+            "img/f1.jpg",
+            "img/f2.jpg",
+            "img/f3.jpg",
+            "img/f4.jpg"
+        ]
+    });
+</script>
+</body>
+</html>
