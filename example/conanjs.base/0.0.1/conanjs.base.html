@@ -47,7 +47,7 @@
 
     <script type="text/javascript" src="../../../src/conanjs.base/0.0.1/conanjs.base.js"></script>
     <script type="text/javascript">
-        var $B = CONANJS.base;
+        var $B = conanjs.dom;
         // id查找
         $B.id('test-id').style.color = '#c00';
 
@@ -69,11 +69,11 @@
 
         // hasClass
         testButton.onclick = function(){
-            if($B.hasClass(testButton,'disabled')){
-                return;
-            }else {
-                alert('hello！');
-            }
+          if($B.hasClass(testButton,'disabled')){
+              return;
+          }else {
+              alert('hello！');
+          }
         }
 
         // addClass
