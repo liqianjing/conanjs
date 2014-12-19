@@ -8,7 +8,8 @@
  * @depend      conanjs.base.js
  */
 (function(){
-    var $B = conanjs.dom;
+    var $B = conanjs.dom,
+        $TOOLS = conanjs.tools;
     //定义默认的参数
     var param  = {
         /**
@@ -55,23 +56,29 @@
          */
         spacing : 2000
     },
-    HIDE = 'hidding';
+    HIDE = 'hidding',
+    interface = null; //这个变量用来存储接口方法 {Object}
 
     function Tips(option){
+        var tipsDepot = this.tips = {};
 
-        conanjs.tools.extend(this,param,option);
+        //注意
+        //所有的私有属性（不能被修改的部分）都必须要存储到this的一个私有属性里面
+        //updata 2014-12-18
+
+        $TOOLS.extend(tipsDepot,param,option);
 
         //解析参数,初始化提示窗口
-        domReader(this);
+        domReader(tipsDepot);
     }
     //接口
-    Tips.prototype = {
+    interface = {
 
         /**
          *  控制窗口的显示和隐藏
          */
         tipsControl : function(){
-            var tar = this.target;
+            var tar = this.tips.target;
             if($B.hasClass(HIDE)){
                 showOrHide(tar);
             }else {
@@ -90,9 +97,16 @@
          *  @type   {String}
          */
         reload : function(content){
-            this.target.innerText = content;
+            this.tips.target.innerText = content;
         }
     };
+
+    //注意
+    //xxx.prototype = {} 这种方式会改变他的指向，所以禁止使用
+    //updata 2014-12-18
+
+    $TOOLS.extend(Tips.prototype,interface);
+
     //这个方法用来控制提示窗口的显示与隐藏
     function showOrHide(tar){
         var control = 'addClass';
