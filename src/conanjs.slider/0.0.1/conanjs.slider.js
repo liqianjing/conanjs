@@ -3,6 +3,7 @@
     var $H = AM.extend,
         $T = AM.type,
         $D = AM.dom,
+
         $E = AM.event;
     var defaultParam = {
         /**
@@ -147,7 +148,7 @@
                     }
                 });
 
-                conanjs.fade.fadein(imageLis[current], 100, speed);
+                AM.fade.fadein(imageLis[current], 100, speed);
 
             }else {
                 var imgWidth = getStyle(imageLis[0],scroll);
