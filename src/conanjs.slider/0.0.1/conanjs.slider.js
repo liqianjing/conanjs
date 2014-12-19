@@ -1,6 +1,7 @@
 (function(){
     //设置默认参数
-    var $T = AM.type,
+    var $H = AM.extend,
+        $T = AM.type,
         $D = AM.dom,
         $E = AM.event;
     var defaultParam = {
@@ -31,12 +32,13 @@
     };
 
     function slider(option) {
-        conanjs.tools.extend(this,defaultParam,option);
+        var interface = this.slider = {};
+        $H(interface,defaultParam,option);
 
-        domReady(this);
+        domReady(interface);
     }
 
-    function getDefaultStyle(obj,attribute){
+    function getStyle(obj,attribute){
         var result = null;
         if(obj.currentStyle) {
             result = obj.currentStyle[attribute];
@@ -82,21 +84,21 @@
                 if(animateParam === 'animate-top') { //如果是要左右滚动
                     $D.addClass(target,'conanjs-top');
                     //得到外框的高度
-                    targetHeight = getDefaultStyle(target,'height');
+                    targetHeight = getStyle(target,'height');
                     uls.style.height = (len * parseInt(targetHeight)) + 'px';
                     animate('top');
                 }else if(animateParam === 'animate-left') { //如果是渐隐渐显
                     $D.addClass(target,'conanjs-left');
                     //得到外框的宽度
-                    targetWidth = getDefaultStyle(target,'width');
+                    targetWidth = getStyle(target,'width');
                     //动态的设置宽度
                     uls.style.width = (len * parseInt(targetWidth)) + 'px';
 
                     animate('left');
                 }else { //如果参数有问题就直接把动画定义为fade
                     $D.addClass(target,'conanjs-fade');
-                    uls.style.width = getDefaultStyle(target,'width') + 'px';
-                    uls.style.height = getDefaultStyle(target,'height') + 'px';
+                    uls.style.width = getStyle(target,'width') + 'px';
+                    uls.style.height = getStyle(target,'height') + 'px';
 
                     animate('fade',param.speed);
                 }
@@ -139,7 +141,7 @@
             if(path === 'fade'){
                 var current = parseInt($this.getAttribute('data-index'),10);
                 AM.each(imageLis,function(){
-                    var opacity = getDefaultStyle(this,'opacity');
+                    var opacity = getStyle(this,'opacity');
                     if(opacity > 0) {
                         this.style.opacity = 0;
                     }
@@ -148,7 +150,7 @@
                 conanjs.fade.fadein(imageLis[current], 100, speed);
 
             }else {
-                var imgWidth = getDefaultStyle(imageLis[0],scroll);
+                var imgWidth = getStyle(imageLis[0],scroll);
                 slider.style[path] = -indexNum * parseInt(imgWidth) + 'px';
             }
 
