@@ -12,7 +12,8 @@ module.exports = function(grunt) {
                 files: {
                     //新的文件的路径以及名称 : [有所的文件的路径名称]
                     'src/conanjs.base/0.0.1/conanjs.base.min.js': ['src/conanjs.base/0.0.1/conanjs.base.js'],
-                    'src/conanjs.tips/0.0.1/conanjs.tips.min.js': ['src/conanjs.tips/0.0.1/conanjs.tips.js']
+                    'src/conanjs.tips/0.0.1/conanjs.tips.min.js': ['src/conanjs.tips/0.0.1/conanjs.tips.js'],
+                    'src/conanjs.slider/0.0.1/conanjs.slider.min.js': ['src/conanjs.slider/0.0.1/conanjs.slider.js']
                 }
             }
         },
@@ -20,7 +21,8 @@ module.exports = function(grunt) {
             my_target: {
                 files: {
                     'src/conanjs.base/0.0.1/conanjs.base.min.js': ['src/conanjs.base/0.0.1/conanjs.base.js'],
-                    'src/conanjs.tips/0.0.1/conanjs.tips.min.js': ['src/conanjs.tips/0.0.1/conanjs.tips.js']
+                    'src/conanjs.tips/0.0.1/conanjs.tips.min.js': ['src/conanjs.tips/0.0.1/conanjs.tips.js'],
+                    'src/conanjs.slider/0.0.1/conanjs.slider.min.js': ['src/conanjs.slider/0.0.1/conanjs.slider.js']
                 }
             }
         },
@@ -28,7 +30,8 @@ module.exports = function(grunt) {
             combine: {
                 files: {
                     'example/conanjs.base/0.0.1/conanjs.base.min.css' : ['example/conanjs.base/0.0.1/conanjs.base.css'],
-                    'example/conanjs.tips/0.0.1/conanjs.tips.min.css' : ['example/conanjs.tips/0.0.1/conanjs.tips.css']
+                    'example/conanjs.tips/0.0.1/conanjs.tips.min.css' : ['example/conanjs.tips/0.0.1/conanjs.tips.css'],
+                    'example/conanjs.slider/0.0.1/conanjs.slider.min.css' : ['example/conanjs.slider/0.0.1/conanjs.slider.css']
                 }
             }
         }
