@@ -3,8 +3,9 @@
     var $H = AM.extend,
         $T = AM.type,
         $D = AM.dom,
+        $E = AM.event,
+        counter = 1;
 
-        $E = AM.event;
     var defaultParam = {
         /**
          *  窗口对象
@@ -64,6 +65,7 @@
                 html = null,
                 animateParam = param.animate;
 
+            //根据参数拼接dom结构
             for(var i = 0; i < len; i++){
                 lis.push('<li><img src="'+ imgs[i] +'" /></li>');
                 number.push('<li>'+ (i + 1) +'</li>');
@@ -72,9 +74,22 @@
             html = '<div class="slider-wrap"><ul class="slider">'+ lis.join('') +'</ul></div><ol class="number">'+ number.join('') +'</ol>';
 
             target.innerHTML = html;
+
+
             //设置默认选中
             $D.addClass($D.tagName('li',$D.className('number')[0])[0],'on');
 
+            if(param.animate === 'animate-fade'){
+                var slider = $D.className('slider')[0],
+                    imageLis = $D.tagName('li',slider);
+                AM.each(imageLis,function(){
+                    var opacity = getStyle(this,'opacity');
+                    if(opacity > 0) {
+                        this.style.opacity = 0;
+                    }
+                });
+                imageLis[0].style.opacity = 1;
+            }
 
             //根据动画改变css，通过不同的class控制
             //如果是纵向滚动--coanajs-y
@@ -114,6 +129,18 @@
             }
         }
     }
+
+    //trigger的实现
+    function trigger(target,type,data){
+        var event = document.createEvent('HTMLEvents');
+        event.initEvent(type,true,true);
+        event.data = data || {};
+        event.eventName = type;
+        event.target = target;
+        target.dispatchEvent(event);
+        return target;
+    }
+
     //动画
     function animate(path,speed){
         //点击下面的小方块出现对应的图片
@@ -121,7 +148,8 @@
             slider = $D.className('slider')[0],
             imageLis = $D.tagName('li',slider),
             speed = speed || 2000,
-            scroll = path === 'left' ? 'width' : ('top' ? 'height' : 'fade');
+            scroll = path === 'left' ? 'width' : ('top' ? 'height' : 'fade'),
+            len = numberLis.length;
 
         $E.on(numberLis,'click',function(){
 
@@ -148,7 +176,7 @@
                     }
                 });
 
-                AM.fade.fadein(imageLis[current], 100, speed);
+                AM.fade.fadein(imageLis[current], 1, speed);
 
             }else {
                 var imgWidth = getStyle(imageLis[0],scroll);
@@ -156,9 +184,26 @@
             }
 
         });
-        //定义定时器自动滚动
+        var timer;
+
+        function run(){
+            //定义定时器自动滚动
+            timer = setInterval(function(){
+                trigger(numberLis[counter],'click');
+                counter = counter === (len-1) ? 0 : (counter + 1);
+            },2000);
+        }
+
+        run();
 
         //鼠标划过的时候停止定时器
+        $E.on($D.className('slider-wrap')[0],'mouseover',function(){
+            clearInterval(timer);
+        });
+        //划离的时候重启定时器
+        $E.on($D.className('slider-wrap')[0],'mouseout',function(){
+            run();
+        });
     }
 
     conanjs.slider = slider;
