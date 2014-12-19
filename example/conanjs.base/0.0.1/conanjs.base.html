@@ -2,90 +2,34 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>实例--conanjs.base</title>
-    <link href="conanjs.base.css" rel="stylesheet" type="text/css" />
+    <title></title>
+    <style type="text/css">
+        .fade {
+            height: 100px;
+            width: 100px;
+            background: #c00;
+            opacity: 0;
+        }
+        .fade2 {
+            height: 100px;
+            width: 100px;
+            background: #c00;
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
-    <div class="wrap">
-        <h2>这个模块包含dom的查找，以及class的操作</h2>
+<div class="fade"></div>
+<div class="fade2"></div>
 
-        <!-- 通过id查找 -->
-        <p class="note">id查找 （调用：CONANJS.base.id('test-id');）</p>
-        <div id="test-id">id为test-id变为红色文字</div>
-        <!-- 通过class查找 -->
-        <p class="note">class查找 （调用：CONNANJS.base.className('test-class')）</p>
-        <div>
-            <p class="test-class">所有的class为test-class的变为蓝色文字</p>
-            <p class="test-class">所有的class为test-class的变为蓝色文字</p>
-            <p class="test-class">所有的class为test-class的变为蓝色文字</p>
-            <p class="test-class">所有的class为test-class的变为蓝色文字</p>
-        </div>
-        <!-- 通过标签查找 -->
-        <p class="note">标签查找   （调用：CONNANJS.base.tagName('test-tagname')）</p>
-        <div>
-            <span>所有的span标签变为绿色文字</span><br />
-            <span>所有的span标签变为绿色文字</span><br />
-            <span>所有的span标签变为绿色文字</span><br />
-        </div>
+<script type="text/javascript" src="../../../../Archmage/dest/Archmage-1.0.0.js"></script>
+<script type="text/javascript" src="../../../src/conanjs.base/0.0.1/conanjs.base.js"></script>
 
-        <p class="note">class操作的表现按钮，有‘disabled’的时候不可点击，反之成立</p>
-        <button class="test-button">click me</button>
-
-        <p class="note">点击下面这个按钮给button加一个‘disabled’的class，使之不可点击</p>
-        <button type="button" class="test-addclass">addClass</button>
-
-        <p class="note">点击下面这个按钮给button去掉‘disabled’的class，使之恢复可点击</p>
-        <button type="button" class="test-removeclass">removeClass</button>
-
-        <div class="code">
-            <div class="html-code"></div>
-            <div class="css-code"></div>
-            <div class="js-code"></div>
-        </div>
-
-    </div>
-
-    <script type="text/javascript" src="../../../src/conanjs.base/0.0.1/conanjs.base.js"></script>
-    <script type="text/javascript">
-        var $B = conanjs.dom;
-        // id查找
-        $B.id('test-id').style.color = '#c00';
-
-        //class查找
-        var classes = $B.className('test-class');
-        for(var i = 0, len = classes.length; i < len; i++){
-            classes[i].style.color = '#00c';
-        }
-
-        //标签查找
-        var spans = $B.tagName('span');
-        for(var j = 0, lens = spans.length; j < lens; j++){
-            spans[j].style.color = '#0a0';
-        }
-
-
-        //class 的操作
-        var testButton = $B.className('test-button')[0];
-
-        // hasClass
-        testButton.onclick = function(){
-          if($B.hasClass(testButton,'disabled')){
-              return;
-          }else {
-              alert('hello！');
-          }
-        }
-
-        // addClass
-        $B.className('test-addclass')[0].onclick = function(){
-            $B.addClass(testButton,'disabled');
-        };
-
-        // removeClass
-        $B.className('test-removeclass')[0].onclick = function(){
-            $B.removeClass(testButton,'disabled');
-        };
-
-    </script>
+<script type="text/javascript">
+    var $D = AM.dom,
+        $F = conanjs.fade;
+    $F.fadein($D.className('fade')[0],100,2000);
+    $F.fadeout($D.className('fade2')[0],0,3000);
+</script>
 </body>
 </html>
