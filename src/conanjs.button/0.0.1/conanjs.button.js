@@ -5,12 +5,30 @@
  * @version     2014-11-21
  * @version     0.0.1
  *
- * @depend      无
- * 本模块用来控制按钮的可点击与不可点击，通过一个class（disabled）来控制，使用原生js来编写故不依赖任何组建
+ * @depend      Archmage
  */
 (function(){
-    clickButton = function(){
-        alert('aaaa');
+    var $D = AM.dom,
+        $T = AM.type,
+        win = this;
+
+    clickButton = function(tar,callback){
+        var DISABLE = 'conanjs-disabled';
+        if(tar && $T.isFunction(callback)){ //如果callback传入一个方法就会执行函数
+
+            if($D.hasClass(tar,DISABLE)){ //如果含有disabled的class就直接返回
+                return;
+            }else { //否则的话加上一个class
+                $D.addClass(tar,DISABLE);
+                if($T.isFunction(callback)){
+                    callback();
+                };
+            }
+
+        }else{ //否则的话我们就会认为是放开按钮的锁定
+            $D.removeClass(tar,DISABLE);
+        }
     };
-    CONANJS.button = clickButton;
+    win.conanjs = win.conanjs ? win.conanjs : {};
+    win.conanjs.button = clickButton;
 })();
