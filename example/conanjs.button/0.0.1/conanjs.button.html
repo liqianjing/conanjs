@@ -7,13 +7,30 @@
 </head>
 <body>
     <div class="wrap">
-        <h2>这个模块用来控制按钮的点击</h2>
+        <!--<h2>这个模块用来控制按钮的点击</h2>-->
+        <button id="btn1">click me</button>
     </div>
 
-    <script type="text/javascript" src="file:///home/lixi/code/github/conanjs/src/conanjs.base/0.0.1/conanjs.base.js"></script>
-    <script type="text/javascript" src="file:///home/lixi/code/github/conanjs/src/conanjs.button/0.0.1/conanjs.button.js"></script>
+    <script type="text/javascript" src="../../../../Archmage/dest/Archmage-1.0.0.js"></script>
+    <script type="text/javascript" src="../../../src/conanjs.button/0.0.1/conanjs.button.js"></script>
     <script type="text/javascript">
-        var $btn = CONANJS.button;
+        var $D = AM.dom,
+            $E = AM.event,
+            btn1 = $D.id('btn1'),
+            cont = 0;
+        var $btn = conanjs.button;
+        $E.on(btn1,'click',function(){
+            $btn(btn1,function(){
+                setInterval(function(){
+                    if(cont < 10){
+                        console.log(cont);
+                        cont++;
+                    }else {
+                        $btn(btn1);
+                    }
+                },1000);
+            });
+        });
     </script>
 </body>
 </html>
