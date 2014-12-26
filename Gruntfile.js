@@ -13,7 +13,8 @@ module.exports = function(grunt) {
                     //新的文件的路径以及名称 : [有所的文件的路径名称]
                     'src/conanjs.base/0.0.1/conanjs.base.min.js': ['src/conanjs.base/0.0.1/conanjs.base.js'],
                     'src/conanjs.tips/0.0.1/conanjs.tips.min.js': ['src/conanjs.tips/0.0.1/conanjs.tips.js'],
-                    'src/conanjs.slider/0.0.1/conanjs.slider.min.js': ['src/conanjs.slider/0.0.1/conanjs.slider.js']
+                    'src/conanjs.slider/0.0.1/conanjs.slider.min.js': ['src/conanjs.slider/0.0.1/conanjs.slider.js'],
+                    'src/conanjs.button/0.0.1/conanjs.button.min.js': ['src/conanjs.button/0.0.1/conanjs.button.js']
                 }
             }
         },
@@ -22,7 +23,8 @@ module.exports = function(grunt) {
                 files: {
                     'src/conanjs.base/0.0.1/conanjs.base.min.js': ['src/conanjs.base/0.0.1/conanjs.base.js'],
                     'src/conanjs.tips/0.0.1/conanjs.tips.min.js': ['src/conanjs.tips/0.0.1/conanjs.tips.js'],
-                    'src/conanjs.slider/0.0.1/conanjs.slider.min.js': ['src/conanjs.slider/0.0.1/conanjs.slider.js']
+                    'src/conanjs.slider/0.0.1/conanjs.slider.min.js': ['src/conanjs.slider/0.0.1/conanjs.slider.js'],
+                    'src/conanjs.button/0.0.1/conanjs.button.min.js': ['src/conanjs.button/0.0.1/conanjs.button.js']
                 }
             }
         },
