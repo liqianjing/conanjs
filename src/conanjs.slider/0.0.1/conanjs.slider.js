@@ -1,6 +1,7 @@
 (function(){
     //设置默认参数
-    var $H = AM.extend,
+    var win = this,
+        $H = AM.extend,
         $T = AM.type,
         $D = AM.dom,
         $E = AM.event,
@@ -97,13 +98,13 @@
             //如果是渐隐渐显--coanajs-fade
             if($T.isString(animateParam)) {
                 uls = target.childNodes[0].childNodes[0];
-                if(animateParam === 'animate-top') { //如果是要左右滚动
+                if(animateParam === 'animate-top') { //如果是上下滚动
                     $D.addClass(target,'conanjs-top');
                     //得到外框的高度
                     targetHeight = getStyle(target,'height');
                     uls.style.height = (len * parseInt(targetHeight)) + 'px';
                     animate('top');
-                }else if(animateParam === 'animate-left') { //如果是渐隐渐显
+                }else if(animateParam === 'animate-left') { //如果是要左右滚动
                     $D.addClass(target,'conanjs-left');
                     //得到外框的宽度
                     targetWidth = getStyle(target,'width');
@@ -143,19 +144,35 @@
 
     //动画
     function animate(path,speed){
+
         //点击下面的小方块出现对应的图片
-        var numberLis = $D.tagName('li',$D.className('number')[0]),
+        var wrap = $D.className('slider-wrap')[0],
+            numberLis = $D.tagName('li',$D.className('number')[0]),
             slider = $D.className('slider')[0],
             imageLis = $D.tagName('li',slider),
             speed = speed || 2000,
             scroll = path === 'left' ? 'width' : ('top' ? 'height' : 'fade'),
-            len = numberLis.length;
+            len = numberLis.length,
+            timer;
 
         $E.on(numberLis,'click',function(){
 
             //现在的this指向每一个li（有循环）
             var $this = this,
-                indexNum = index($this,numberLis);
+                indexNum = index($this,numberLis),
+                paths = null;
+
+            //运动过程中如果点击下面的数字方格
+            if(counter !== indexNum) {
+                counter = indexNum == (numberLis.length - 1) ? 0 : (indexNum + 1);
+                clearInterval(timer);
+                $E.off(wrap,'mouseout',run);
+                setTimeout(function(){
+                    run();
+                    $E.on(wrap,'mouseout',run);
+                },3000);
+            }
+
             //当前选中的加一个class显示为当前的
             AM.each(numberLis,function(){
                 $D.removeClass(this,'on');
@@ -178,33 +195,55 @@
 
                 AM.fade.fadein(imageLis[current], 1, speed);
 
-            }else {
-                var imgWidth = getStyle(imageLis[0],scroll);
-                slider.style[path] = -indexNum * parseInt(imgWidth) + 'px';
+            }else if(path === 'top' || path === 'left'){
+
+                var string = path,
+                    imgWidth = getStyle(imageLis[0],scroll),
+                    $slider = $D.className('slider')[0],
+                    nowLeft = Math.abs(parseInt($D.getStyle($slider,string))),
+                    leftVal = parseInt(imgWidth) * (len-1);
+
+                if(nowLeft >= leftVal){
+                    $D.setStyle($slider,string,'0px');
+                }else {
+                    len = indexNum * parseInt(imgWidth) - nowLeft;
+
+                    if (path === 'top'){
+                        paths = len > 0 ? 'bottom' : 'top';
+                    }else {
+                        paths = len > 0 ? 'right' : 'left';
+                    }
+
+                    AM.easing({
+                        target : $D.className('slider')[0],
+                        len : Math.abs(len),
+                        path : paths,
+                        speed : 1000
+                    });
+                }
             }
 
         });
-        var timer;
 
         function run(){
             //定义定时器自动滚动
             timer = setInterval(function(){
                 trigger(numberLis[counter],'click');
                 counter = counter === (len-1) ? 0 : (counter + 1);
-            },2000);
+            },3000);
         }
 
+        //开启定时器
         run();
 
         //鼠标划过的时候停止定时器
-        $E.on($D.className('slider-wrap')[0],'mouseover',function(){
+        $E.on(wrap,'mouseover',function(){
             clearInterval(timer);
         });
         //划离的时候重启定时器
-        $E.on($D.className('slider-wrap')[0],'mouseout',function(){
-            run();
-        });
+        $E.on(wrap,'mouseout',run);
     }
 
+    win.conanjs = win.conanjs ? win.conanjs : {};
     conanjs.slider = slider;
 })();
