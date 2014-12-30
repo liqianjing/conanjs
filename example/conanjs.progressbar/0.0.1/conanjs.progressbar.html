@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="./conanjs.progressbar.css"/>
+</head>
+<body>
+
+<div class="progressbar"></div>
+
+<!-- js -->
+<script type="text/javascript" src="../../../../Archmage/dest/Archmage-1.0.0.js"></script>
+<script type="text/javascript" src="../../../src/conanjs.progressbar/0.0.1/conanjs.progressbar.js"></script>
+<script type="text/javascript">
+    var $D = AM.dom;
+
+    conanjs.progressbar({
+        target : $D.className('progressbar')[0],
+        proportion : 30,
+        style : 'defaule',
+        height : '100px',
+        width : '4px'
+    });
+</script>
+</body>
+</html>

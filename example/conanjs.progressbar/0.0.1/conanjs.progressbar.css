@@ -1,0 +1,41 @@
+body,html,div {
+    padding : 0;
+    margin : 0;
+}
+.conanjs-progressbar {
+    position: relative;
+}
+.conanjs-progressbar .bg {
+    position: absolute;
+    left : 10px;
+    top : 0;
+    z-index : 1;
+    background: #c2ccd1;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #0d3349;
+}
+.conanjs-progressbar .progress {
+    width: 4px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+    background: #2b81af;
+}
+.conanjs-progressbar .bar {
+    position: absolute;
+    left: -3px;
+    /*这个参数是用来调整的*/
+    top: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 5px #333333;
+}
+.conanjs-progressbar .progress-number {
+    position: absolute;
+    bottom: -30px;
+}
