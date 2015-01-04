@@ -13,8 +13,7 @@
         $H = AM.extend,
         $T = AM.type,
         $D = AM.dom,
-        $E = AM.event,
-        barDepot = win.bar = {};
+        $E = AM.event;
 
     var defaultParam = {
         /**
@@ -48,10 +47,21 @@
          */
         style : 'default'
     };
+    if(AM.platform.touchDevice) {
+        var down = 'touchstart',
+            move = 'touchmove',
+            up = 'touchend';
+    }else {
+        var down = 'mousedown',
+            move = 'mousemove',
+            up = 'mouseup';
+    }
 
     function progressbar(option){
+
+        var barDepot = this.tips = {};
         //参数合并处理
-        $H(barDepot,defaultParam,option);
+        AM.extend(barDepot,defaultParam,option);
         //把参数传给domReady
         domReady(barDepot);
     }
@@ -61,27 +71,25 @@
 
         if(tar){
             //第一步：拼接dom结构在里面
-            var domArr = [
-                '<div class="bg">',
-                    '<div class="progress">',
-                        '<div class="bar"></div>',
+            //防止重新绘制
+            if($T.isNumber(param.proportion) || parseInt(param.proportion)) {
+                var proHei = parseInt(param.height) * (param.proportion/100) + 'px';
+                var domArr = [
+                    '<div class="bg" style="height: ' + param.height + '; width: ' + param.width + ';">',
+                        '<div class="progress" style="height: '+ proHei +'">',
+                            '<div class="bar"></div>',
+                        '</div>',
                     '</div>',
-                '</div>',
-                '<div class="progress-number"></div>'
-            ].join('');
-            $D.addClass(tar,'conanjs-progressbar');
-            tar.innerHTML = domArr;
+                    '<div class="progress-number">'+ (param.proportion / parseInt(param.height)) * 100 + "%" +'</div>'
+                ].join('');
 
-            //第二步 ： 给予基本样式
-            $D.setStyle([tar,$D.className('bg')[0]],{'height':param.height,'width':param.width});
-
-            //第三步 ： 按比例设置progressbar的高度
-            if($T.isNumber(param.proportion)) {
-                $D.setStyle($D.className('progress')[0],'height',parseInt(param.height) * (param.proportion/100) + 'px');
+                $D.addClass(tar,'conanjs-progressbar');
+                tar.innerHTML = domArr;
             }
 
-            //第四步 ： 显示进度的数字
-            $D.className('progress-number')[0].innerHTML = (param.proportion / parseInt(param.height)) * 100 + '%';
+
+            //第二步 ： 给予基本样式
+            $D.setStyle(tar,{'height':param.height,'width':param.width});
 
             //第五步 ： 实现拖动小球改变进度
             changeProgress(param);
@@ -91,7 +99,8 @@
     //这个方法用来获取鼠标的位置
     function mousePos(e){
         var x, y,
-            e = e||window.event;
+            e = e || win.event;
+
         return {
             x:e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft,
             y:e.clientY+document.body.scrollTop+document.documentElement.scrollTop
@@ -103,6 +112,7 @@
         var $progress = $D.className('progress')[0],
             $bar = $D.className('bar')[0],
             $bg = $D.className('bg')[0];
+
         function change(){
             //第一步获取鼠标的位置
             var result = mousePos(),
@@ -112,14 +122,31 @@
             //第三步改变进度值
             $D.className('progress-number')[0].innerHTML = (hei / parseInt(param.height)) * 100 + '%';
         }
-        $E.on($bar,'mousedown',function(){
-            $E.on($bg,'mousemove',change);
-            $E.on($bg,'mouseup',function(){
+
+        //绑定事件
+        function bindEvent(){
+            //debugger;
+            var $bg = $D.className('bg')[0];
+            $E.on($bg,move,change);
+            $E.on($bg,up,function(){
                 //注：这里的off利用的removeEventListener，后面必须接事件
                 //即change必须要提出来
-                $E.off($bg,'mousemove',change);
+                $E.off($bg,move,change);
             });
+        }
+
+        $E.on($bar,down,bindEvent);
+        $E.on($bar,up,function(){
+            $E.off($bg,down,bindEvent);
         });
+//        $E.on($bar,down,function(){
+//            $E.on($bg,move,change);
+//            $E.on($bg,up,function(){
+//                //注：这里的off利用的removeEventListener，后面必须接事件
+//                //即change必须要提出来
+//                $E.off($bg,move,change);
+//            });
+//        });
     }
 
     win.conanjs = win.conanjs ? win.conanjs : {};
